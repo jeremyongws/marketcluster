@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title data-x="3.069905" data-y="101.609922">Crime Heatmaps around Sunway Pinnacle</title>
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+      #panel {
+        position: absolute;
+        top: 5px;
+        left: 50%;
+        margin-left: -180px;
+        z-index: 5;
+        background-color: #fff;
+        padding: 5px;
+        border: 1px solid #999;
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=visualization"></script>
+    <script>
+// Adding 500 Data Points
+    var map, pointarray, heatmap;
+    var sunway_pinnacle = new google.maps.LatLng(3.069905, 101.609922);
+    var sunway_mentari = new google.maps.LatLng(3.078551, 101.607036);
+    var x_coord1 = sunway_mentari["A"];
+    var y_coord1 = sunway_mentari["F"];
+    var usj2 = new google.maps.LatLng(3.059910, 101.588454);
+    var x_coord2 = usj2["A"];
+    var y_coord2 = usj2["F"];
+    var heatmapData = [new google.maps.LatLng(x_coord1, y_coord1), new google.maps.LatLng(x_coord2, y_coord2), new google.maps.LatLng(x_coord2, y_coord2-0.005), new google.maps.LatLng(3.077737, 101.589505), new google.maps.LatLng(3.068073, 101.624117)]; 
+    // debugger
+    // for (i = 0; i < 50; i++) {
+    //   heatmapData.push(new google.maps.LatLng(x_coord+0.00012, y_coord-0.0001));
+    //   x_coord += 0.00012,
+    //   y_coord -= 0.0001
+    // };
+    // for (i = 0; i < 50; i++) {
+    //   heatmapData.push(new google.maps.LatLng(x_coord-0.00012, y_coord+0.0001));
+    //   x_coord -= 0.00012,
+    //   y_coord += 0.0001
+    // };
+    // for (i = 0; i < 50; i++) {
+    //   heatmapData.push(new google.maps.LatLng(x_coord+0.00012, y_coord+0.0001));
+    //   x_coord += 0.00012,
+    //   y_coord += 0.0001
+    // };
+    // debugger
+    function initialize() {
+      var mapOptions = {
+        zoom: 15,
+        center: sunway_pinnacle
+      };
+
+      map = new google.maps.Map(document.getElementById('map-canvas'),
+          mapOptions);
+
+      var pointArray = new google.maps.MVCArray(heatmapData);
+
+      heatmap = new google.maps.visualization.HeatmapLayer({
+        data: pointArray
+      });
+
+      heatmap.setMap(map);
+      marker = new google.maps.Marker({
+        map:map,
+        draggable:true,
+        animation: google.maps.Animation.DROP,
+        position: sunway_pinnacle
+      });
+      changeRadius();
+      debugger;
+      heatmap.data.addListener('click', function(event) {
+        window.location.href = "http://stackoverflow.com";
+      });
+    }
+
+    function toggleHeatmap() {
+      heatmap.setMap(heatmap.getMap() ? null : map);
+    }
+
+    function changeGradient() {
+      var gradient = [
+        'rgba(0, 255, 255, 0)',
+        'rgba(0, 255, 255, 1)',
+        'rgba(0, 191, 255, 1)',
+        'rgba(0, 127, 255, 1)',
+        'rgba(0, 63, 255, 1)',
+        'rgba(0, 0, 255, 1)',
+        'rgba(0, 0, 223, 1)',
+        'rgba(0, 0, 191, 1)',
+        'rgba(0, 0, 159, 1)',
+        'rgba(0, 0, 127, 1)',
+        'rgba(63, 0, 91, 1)',
+        'rgba(127, 0, 63, 1)',
+        'rgba(191, 0, 31, 1)',
+        'rgba(255, 0, 0, 1)'
+      ]
+      heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
+    }
+
+    function changeRadius() {
+      heatmap.set('radius', heatmap.get('radius') ? null : 170);
+    }
+
+    function changeOpacity() {
+      heatmap.set('opacity', heatmap.get('opacity') ? null : 0.2);
+    }
+
+    
+
+    
+  // [END snippet]
+
+    google.maps.event.addDomListener(window, 'load', initialize);
+
+
+  </script>
+    </head>
+
+    <body>
+      <div id="panel">
+        <button onclick="toggleHeatmap()">Toggle Heatmap</button>
+        <button onclick="changeGradient()">Change gradient</button>
+        <button onclick="changeRadius()">Change radius</button>
+        <button onclick="changeOpacity()">Change opacity</button>
+      </div>
+      <div id="map-canvas"></div>
+    </body>
+  </html>

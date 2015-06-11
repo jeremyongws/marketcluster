@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Remember, Be Safe!</title>
+    <style >
+      body {
+        margin: 0;
+        padding: 10px 20px 20px;
+        font-family: Arial;
+        font-size: 16px;
+      }
+      #map-container {
+        padding: 6px;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #ccc #ccc #999 #ccc;
+        -webkit-box-shadow: rgba(64, 64, 64, 0.5) 0 2px 5px;
+        -moz-box-shadow: rgba(64, 64, 64, 0.5) 0 2px 5px;
+        box-shadow: rgba(64, 64, 64, 0.1) 0 2px 5px;
+        width: 600px;
+      }
+      #map {
+        width: 600px;
+        height: 400px;
+      }
+    </style>
+
+    <script src="https://maps.googleapis.com/maps/api/js"></script>
+    <script src="data.json"></script>
+    <script>
+      var script = '<script type="text/javascript" src="../../public/js/markerclusterer';
+      if (document.location.search.indexOf('compiled') !== -1) {
+        script += '_compiled';
+      }
+      script += '.js"><' + '/script>';
+      document.write(script);
+    </script>
+
+    <script>
+
+      function random(min, max, decimal, exclude) {
+        // if no min and max is passed, return true or false
+        if (arguments.length < 2) return(Math.random() >= 0.5);
+
+        // calc decimal multiplier
+        var factor = 1, result;
+        if (typeof decimal === "number") {
+            factor = Math.pow(10, decimal);
+        }
+
+        // loop until we get a value that isn't our exclude value
+        do {
+            result = Math.random() * (max - min) + min;
+            result = Math.round(result * factor) / factor;
+        } while (result === exclude);
+        return result;
+      };
+
+      function initialize() {
+        var sunway_pinnacle = new google.maps.LatLng(3.069905, 101.609922);
+        var sunway_mentari = new google.maps.LatLng(3.078551, 101.607036);
+        var x_coord1 = sunway_mentari["A"];
+        var y_coord1 = sunway_mentari["F"];
+        var usj2 = new google.maps.LatLng(3.059910, 101.588454);
+        var x_coord2 = usj2["A"];
+        var y_coord2 = usj2["F"];
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 16,
+          center: sunway_pinnacle,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+
+        var icon = 'http://chart.apis.google.com/chart?cht=mm&chs=24x32&chco=FFFFFF,008CFF,000000&ext=.png';
+        var currentMarker = new google.maps.Marker({
+            position: sunway_pinnacle,
+            map: map,
+            icon: icon
+        });
+
+        var markers = [];
+
+        for (var i = 0; i < 2000; i++) {
+          var latLng = new google.maps.LatLng(x_coord1,
+              y_coord1);
+          var marker = new google.maps.Marker({
+            position: latLng
+          });
+          markers.push(marker);
+          if (i <= 500) {
+            y_coord1 += random(0.0001, 0.001, 4, 0.1)
+            x_coord1 -= random(0.00003, 0.0001, 4, 0.1)
+          } else if (i <= 1000) {
+            y_coord1 -= random(0.0001, 0.002, 4, 0.1)
+            x_coord1 += random(0.0001, 0.002, 4, 0.1)
+          } else if (i <= 1500) {
+            y_coord1 += random(0.0001, 0.002, 4, 0.1)
+            x_coord1 += random(0.0001, 0.002, 4, 0.1)
+          } else {
+            y_coord1 += random(0.0001, 0.002, 4, 0.1)
+            x_coord1 -= random(0.0001, 0.002, 4, 0.1)
+          }
+        };
+        var markerCluster = new MarkerClusterer(map, markers);
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body>
+    <h3>Recently reported crimes around you..</h3>
+    <div id="map-container"><div id="map"></div></div>
+  </body>
+</html>
